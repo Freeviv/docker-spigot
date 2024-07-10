@@ -6,6 +6,17 @@
 # (c) 2021 nimmis <kjell.havneskold@gmail.com>
 #
 ###########################################################
+function set_java_22 () {
+  if ! [ -d /usr/lib/jvm/jdk-22* ]; then
+    echo "Downloading JDK 1.22"
+    curl -L https://github.com/adoptium/temurin22-binaries/releases/download/jdk-22.0.1%2B8/OpenJDK22U-jdk_x64_linux_hotspot_22.0.1_8.tar.gz  | tar xz -C /usr/lib/jvm
+  fi
+
+  echo "set java version to 22"
+  rm -f /usr/lib/jvm/default-jvm
+  ln -s /usr/lib/jvm/jdk-22* /usr/lib/jvm/default-jvm
+}
+
 function set_java_21 () {
   if ! [ -d /usr/lib/jvm/jdk-21* ]; then
     echo "Downloading JDK 1.21"
@@ -15,9 +26,7 @@ function set_java_21 () {
   echo "set java version to 21"
   rm -f /usr/lib/jvm/default-jvm
   ln -s /usr/lib/jvm/jdk-21* /usr/lib/jvm/default-jvm
-
 }
-
 
 function set_java_20 () {
   if ! [ -d /usr/lib/jvm/jdk-20* ]; then
@@ -93,6 +102,9 @@ function set_java_8 () {
 
 }
 case "$1" in
+  22)
+    set_java_22
+    ;;
   21)
     set_java_21
     ;;
@@ -121,7 +133,7 @@ case "$1" in
     echo "set_java_ver <version>"
     echo "set the java version for the container"
     echo
-    echo "Available versions are 8, 11, 16, 17, 18, 20 and 21"
+    echo "Available versions are 8, 11, 16, 17, 18, 20, 21 and 22"
     exit 1
   ;;
 esac
